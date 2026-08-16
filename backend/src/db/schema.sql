@@ -11,6 +11,27 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- email verificationa table 
+
+CREATE TABLE email_verifications (
+    email_verification_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    user_id UUID NOT NULL UNIQUE,
+
+    otp VARCHAR(6) NOT NULL,
+
+    expires_at TIMESTAMP NOT NULL,
+
+    is_verified BOOLEAN DEFAULT FALSE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_email_verification_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+);
+
 -- create user profile table
 CREATE TABLE user_profile (
     user_profile_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
