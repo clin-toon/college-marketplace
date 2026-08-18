@@ -1,13 +1,19 @@
 import express, { Response, Request } from "express";
 import { pool } from "./db/pool";
 import { env } from "./config/env";
-
+import { errorHandler } from "./middlewares/errorHandler.middleware";
+import authRoutes from "./modules/auth/auth.routes";
 const app = express();
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hi");
 });
+
+app.use("/api/v1/auth", authRoutes);
+
+// centralized error handler
+app.use(errorHandler);
 
 // db connection check
 pool
