@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verification failed · Campus Marketplace</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../index.css" />
+
+    <script src="../app.js"></script>
+  </head>
+
+  <body class="min-h-screen bg-bg text-ink antialiased">
+    <div
+      class="page-shell min-h-screen w-full flex items-center justify-center"
+    >
+      <div
+        class="grid w-full max-w-[1440px] grid-cols-1 overflow-hidden rounded-2xl border border-border bg-surface shadow-[0_1px_2px_rgba(15,23,42,0.04),0_20px_60px_rgba(15,23,42,0.08)] lg:grid-cols-12 lg:h-[80vh]"
+      >
+        <!-- ============ LEFT: BRAND / VISUAL PANEL (4/12) ============ -->
+        <aside
+          class="relative order-1 flex flex-col justify-between overflow-hidden bg-ink px-8 py-10 sm:px-10 sm:py-12 lg:order-none lg:col-span-4 lg:h-full"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-[#1E1B4B] via-ink to-[#0F172A]"
+          ></div>
+          <div class="absolute inset-0 dot-grid opacity-40"></div>
+          <div
+            class="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-primary/30 blur-3xl"
+          ></div>
+          <div
+            class="absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-accentLight/20 blur-3xl"
+          ></div>
+
+          <div class="relative z-10 flex h-full flex-col justify-between">
+            <div class="flex items-center gap-2">
+              <span
+                class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary font-display text-sm font-bold text-white"
+                >CM</span
+              >
+              <span class="font-display text-lg font-semibold text-white"
+                >Campus Marketplace</span
+              >
+            </div>
+
+            <div class="py-10 lg:py-0">
+              <h1
+                class="font-display text-4xl font-extrabold leading-[1.1] text-white sm:text-5xl lg:text-4xl xl:text-5xl"
+              >
+                Hang<br />tight.
+              </h1>
+              <p class="mt-5 max-w-xs text-base text-slate-300">
+                Codes are single-use and expire quickly to keep your account
+                secure — a new one is only a tap away.
+              </p>
+            </div>
+
+            <div class="flex items-center gap-4 text-xs text-slate-400">
+              <span>Verified student accounts</span>
+              <span class="h-1 w-1 rounded-full bg-slate-500"></span>
+              <span>Codes expire in 10 min</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- ============ RIGHT: FAILURE STATE (8/12) ============ -->
+        <main
+          class="order-2 flex items-center justify-center overflow-y-auto px-6 py-10 sm:px-12 sm:py-12 lg:order-none lg:col-span-8 lg:h-full lg:px-16"
+        >
+          <div class="w-full max-w-md text-center">
+            <!-- icon badge -->
+            <div
+              class="animate-popIn mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-danger"
+            >
+              <svg
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="15" y1="9" x2="9" y2="15" />
+                <line x1="9" y1="9" x2="15" y2="15" />
+              </svg>
+            </div>
+
+            <div class="animate-fadeSlideIn">
+              <h2
+                class="mt-6 font-display text-2xl font-bold text-ink sm:text-3xl"
+              >
+                Verification failed
+              </h2>
+              <p class="mx-auto mt-3 max-w-sm text-sm text-muted">
+                We couldn't verify your code. It may have expired, or you've
+                used up your attempts for this code.
+              </p>
+
+              <!-- reason chip -->
+              <div
+                class="mx-auto mt-5 inline-flex items-center gap-2 rounded-lg border border-border bg-slate-50 px-3.5 py-2 text-left"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="shrink-0 text-muted"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <span id="failReason" class="text-xs font-medium text-muted"
+                  >Code expired · sent 12 minutes ago</span
+                >
+              </div>
+
+              <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href="/otp"
+                  class="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors duration-150 hover:bg-primaryHover focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/25 active:scale-[0.99]"
+                >
+                  Request a new code
+                </a>
+                <a
+                  href="/register"
+                  class="flex flex-1 items-center justify-center gap-2 rounded-lg border border-border bg-white px-4 py-3 text-sm font-semibold text-ink shadow-sm transition-colors duration-150 hover:bg-slate-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/10 active:scale-[0.99]"
+                >
+                  Back to registration
+                </a>
+              </div>
+
+              <p class="mt-6 text-xs text-muted">
+                Still stuck?
+                <a
+                  href="mailto:support@campusmarketplace.app"
+                  class="font-medium text-primary hover:text-primaryHover focus:outline-none focus-visible:underline"
+                  >Contact support</a
+                >
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
