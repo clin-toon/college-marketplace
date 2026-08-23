@@ -1,0 +1,71 @@
+  body {
+      font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .font-display {
+      font-family: "Sora", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .dot-grid {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.16) 1px,
+              transparent 1px);
+      background-size: 22px 22px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+      }
+  }
+
+  .field-input {
+      transition:
+          border-color 180ms ease,
+          box-shadow 180ms ease,
+          background-color 180ms ease;
+  }
+
+  .req-item svg {
+      transition:
+          stroke 180ms ease,
+          opacity 180ms ease;
+  }
+
+  .strength-bar span {
+      transition:
+          background-color 200ms ease,
+          opacity 200ms ease;
+  }
+
+
+  .page-shell {
+      padding: 6vh 5vw;
+  }
+
+  @media (min-width: 1024px) {
+      .page-shell {
+          padding: 10vh 10vw;
+      }
+  }
+
+  ::-webkit-scrollbar {
+      width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+      background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+  }

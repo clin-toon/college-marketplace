@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// registration form validation schema
 export const registrationSchema = z.object({
   fullName: z
     .string()
