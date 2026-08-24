@@ -3,7 +3,9 @@ import { pool } from "./db/pool";
 import { env } from "./config/env";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import authRoutes from "./modules/auth/auth.routes";
+import cors from "cors";
 const app = express();
+
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
