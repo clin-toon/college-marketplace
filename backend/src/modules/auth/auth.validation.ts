@@ -38,4 +38,14 @@ export const registrationSchema = z.object({
     ),
 });
 
+export const verifyOtpSchema = z.object({
+  email: z.string().trim().email("Invalid email address"),
+
+  otp: z
+    .string()
+    .trim()
+    .regex(/^\d{6}$/, "OTP must be a 6-digit number"),
+});
+
+export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>;
 export type RegistrationInput = z.infer<typeof registrationSchema>;
