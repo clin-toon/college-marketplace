@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log in · Campus Marketplace</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../index.css" />
+    <script src="../tailwind.js"></script>
+  </head>
+
+  <body class="min-h-screen bg-bg text-ink antialiased">
+    <div
+      class="page-shell min-h-screen w-full flex items-center justify-center"
+    >
+      <div
+        class="grid w-full max-w-[1440px] grid-cols-1 overflow-hidden rounded-2xl border border-border bg-surface shadow-[0_1px_2px_rgba(15,23,42,0.04),0_20px_60px_rgba(15,23,42,0.08)] lg:grid-cols-12 lg:h-[80vh]"
+      >
+        <aside
+          class="relative order-1 flex flex-col justify-between overflow-hidden bg-ink px-8 py-10 sm:px-10 sm:py-12 lg:order-none lg:col-span-4 lg:h-full"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-br from-[#1E1B4B] via-ink to-[#0F172A]"
+          ></div>
+          <div class="absolute inset-0 dot-grid opacity-40"></div>
+          <div
+            class="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-primary/30 blur-3xl"
+          ></div>
+          <div
+            class="absolute -bottom-24 -left-16 h-64 w-64 rounded-full bg-accentLight/20 blur-3xl"
+          ></div>
+
+          <div class="relative z-10 flex h-full flex-col justify-between">
+            <div class="flex items-center gap-2">
+              <span
+                class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary font-display text-sm font-bold text-white"
+                >CM</span
+              >
+              <span class="font-display text-lg font-semibold text-white"
+                >Campus Marketplace</span
+              >
+            </div>
+
+            <div class="py-10 lg:py-0">
+              <h1
+                class="font-display text-4xl font-extrabold leading-[1.1] text-white sm:text-5xl lg:text-4xl xl:text-5xl"
+              >
+                Welcome<br />back.
+              </h1>
+              <p class="mt-5 max-w-xs text-base text-slate-300">
+                Your listings, chats, and saved items are right where you left
+                them.
+              </p>
+
+              <div class="mt-8 hidden space-y-3 sm:block">
+                <div
+                  style="--tilt: -2deg"
+                  class="animate-floatSlow flex w-fit items-center gap-2.5 rounded-xl border border-white/10 bg-white/95 py-2 pl-2 pr-4 shadow-lg"
+                >
+                  <span
+                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-base"
+                    >💬</span
+                  >
+                  <div>
+                    <p class="text-xs font-semibold text-ink">2 new messages</p>
+                    <p class="text-[11px] text-muted">From buyers near you</p>
+                  </div>
+                </div>
+                <div
+                  style="--tilt: 2deg; animation-delay: 0.9s"
+                  class="animate-floatSlow ml-6 flex w-fit items-center gap-2.5 rounded-xl border border-white/10 bg-white/95 py-2 pl-2 pr-4 shadow-lg"
+                >
+                  <span
+                    class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-base"
+                    >📚</span
+                  >
+                  <div>
+                    <p class="text-xs font-semibold text-ink">
+                      Calculus Textbook
+                    </p>
+                    <p class="text-[11px] text-muted">3 people watching</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-4 text-xs text-slate-400">
+              <span>Verified student accounts</span>
+              <span class="h-1 w-1 rounded-full bg-slate-500"></span>
+              <span>No listing fees</span>
+            </div>
+          </div>
+        </aside>
+
+        <main
+          class="order-2 flex items-center justify-center overflow-y-auto px-6 py-10 sm:px-12 sm:py-12 lg:order-none lg:col-span-8 lg:h-full lg:px-16"
+        >
+          <div class="w-full max-w-md">
+            <h2 class="font-display text-2xl font-bold text-ink sm:text-3xl">
+              Log in to your account
+            </h2>
+            <p class="mt-1.5 text-sm text-muted">
+              Welcome back. Enter your details to continue.
+            </p>
+
+            <div
+              id="formStatus"
+              role="alert"
+              aria-live="assertive"
+              class="mt-5 hidden items-start gap-2.5 overflow-hidden rounded-lg border border-danger/20 bg-danger/5 px-4 py-3 text-sm text-danger"
+            >
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="mt-0.5 shrink-0"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <div class="min-w-0">
+                <p id="formStatusText" class="font-medium leading-snug"></p>
+                <a
+                  id="formStatusAction"
+                  href="#"
+                  class="mt-1 hidden text-xs font-semibold text-danger underline underline-offset-2 hover:text-red-700"
+                ></a>
+              </div>
+            </div>
+
+            <form id="loginForm" novalidate class="mt-6 space-y-5">
+              <div>
+                <label
+                  for="email"
+                  class="mb-1.5 block text-sm font-medium text-ink"
+                  >Email Address</label
+                >
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  autocomplete="email"
+                  placeholder="you@example.com"
+                  class="field-input w-full rounded-lg border border-border bg-white px-4 py-3 text-sm text-ink placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
+                  aria-invalid="false"
+                  aria-describedby="email-error"
+                  required
+                />
+                <p
+                  id="email-error"
+                  class="mt-1.5 hidden items-center gap-1 text-xs font-medium text-danger"
+                  role="alert"
+                ></p>
+              </div>
+
+              <div>
+                <div class="mb-1.5 flex items-center justify-between">
+                  <label
+                    for="password"
+                    class="block text-sm font-medium text-ink"
+                    >Password</label
+                  >
+                  <a
+                    href="/forgot-password"
+                    class="text-xs font-medium text-primary hover:text-primaryHover focus:outline-none focus-visible:underline"
+                    >Forgot password?</a
+                  >
+                </div>
+                <div class="relative">
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    autocomplete="current-password"
+                    placeholder="Enter your password"
+                    class="field-input w-full rounded-lg border border-border bg-white px-4 py-3 pr-11 text-sm text-ink placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
+                    aria-invalid="false"
+                    aria-describedby="password-error"
+                    required
+                  />
+                  <button
+                    type="button"
+                    id="togglePassword"
+                    class="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-slate-400 hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-r-lg"
+                    aria-label="Show password"
+                    aria-pressed="false"
+                  >
+                    <svg
+                      id="eyeIcon"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </button>
+                </div>
+                <p
+                  id="password-error"
+                  class="mt-1.5 hidden items-center gap-1 text-xs font-medium text-danger"
+                  role="alert"
+                ></p>
+              </div>
+
+              <label
+                class="flex select-none items-center gap-2 text-sm text-muted"
+              >
+                <input
+                  type="checkbox"
+                  id="rememberMe"
+                  class="h-4 w-4 rounded border-border text-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
+                />
+                Remember me on this device
+              </label>
+
+              <button
+                type="submit"
+                id="loginBtn"
+                class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white shadow-sm transition-colors duration-150 hover:bg-primaryHover focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/25 disabled:cursor-not-allowed disabled:opacity-60 active:scale-[0.99]"
+              >
+                <svg
+                  id="loginSpinner"
+                  class="hidden h-4 w-4 animate-spin"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  ></path>
+                </svg>
+                <span id="loginLabel">Log In</span>
+              </button>
+
+              <p class="text-center text-sm text-muted">
+                New to Campus Marketplace?
+                <a
+                  href="/frontend/"
+                  class="font-medium text-primary hover:text-primaryHover focus:outline-none focus-visible:underline"
+                  >Create an account</a
+                >
+              </p>
+            </form>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src=""></script>
+  </body>
+</html>

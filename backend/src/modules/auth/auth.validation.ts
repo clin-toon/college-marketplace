@@ -1,13 +1,34 @@
 import { z } from "zod";
 
+// registration form validation schema
 export const registrationSchema = z.object({
   fullName: z
     .string()
+    .regex(/^[A-Za-z]+(?:\s+[A-Za-z]+)*$/, "Invalid full name ")
     .min(1, "Full name is required.")
-    .max(15, "Full name must be less than 30 characters."),
+    .max(50, "Full name must be less than 30 characters."),
 
-  email: z.string().email("Invalid email address."),
+  email: z
+    .string()
+    .trim()
+    .max(254, "Email is too long")
+    .email("Invalid email address")
+    .refine((email) => {
+      const domain = email.split("@")[1]?.toLowerCase();
 
+      if (!domain) return false;
+
+      const parts = domain.split(".");
+
+      if (
+        parts.length >= 3 &&
+        parts[parts.length - 1] === parts[parts.length - 2]
+      ) {
+        return false;
+      }
+
+      return true;
+    }, "Invalid email domain"),
   phoneNumber: z
     .string()
     .regex(
@@ -15,10 +36,7 @@ export const registrationSchema = z.object({
       "Phone number must be exactly 10 digits and start with 9.",
     ),
 
-  faculty: z
-    .string()
-    .min(1, "Faculty is required.")
-    .max(7, "Faculty must be at most 7 characters long."),
+  faculty: z.enum(["bsc.csit", "bim", "bba", "bbm", "bsw", "bit", "btech ai"]),
 
   semester: z
     .string()

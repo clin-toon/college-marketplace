@@ -11,7 +11,7 @@ export const registerController: RequestHandler = async (
   return res.status(200).json({
     success: true,
     message:
-      "Registration successful. Please verify the OTP sent to your email to post listings.",
+      "Registration successful. Please verify the OTP sent to your email.",
   });
 };
 
@@ -36,3 +36,5 @@ export const verifyEmailController: RequestHandler = async (
     message: result.message,
   });
 };
+
+export const loginController = (req: Request, res: Response) => {};

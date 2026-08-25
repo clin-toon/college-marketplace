@@ -72,6 +72,20 @@ const sendOTPinEmail = async (email: string, otpCode: string) => {
 };
 
 /*
+This service checks whether there is already user registered
+or not with the provided email
+*/
+
+export const checkIfUserExists = async (email: string) => {
+  const query = `SELECT * from users where email = $1`;
+  const res = await pool.query(query, [email]);
+
+  if (res.rowCount !== 0) {
+    throw new AppError("User with this email already exists. ", 400);
+  }
+};
+
+/*
 This service add otp details and user details
 to database for later verifying the otp details
 and creating user profile and user accounts.
@@ -170,7 +184,7 @@ export const registerAccount = async (registerDetails: RegistrationInput) => {
       400,
     );
   }
-
+  await checkIfUserExists(email);
   const otp = generateOtp();
   await addDetailsToDatabase(registerDetails, otp);
   await sendOTPinEmail(email, otp); // sending otp to the end user

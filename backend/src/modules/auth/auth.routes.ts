@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { registerController, verifyEmailController } from "./auth.controllers";
+import {
+  loginController,
+  registerController,
+  verifyEmailController,
+} from "./auth.controllers";
 import { validate } from "../../middlewares/validate.middleware";
 import { registrationSchema, verifyOtpSchema } from "./auth.validation";
 
@@ -15,5 +19,7 @@ router.post(
   validate({ body: verifyOtpSchema }),
   verifyEmailController,
 );
+
+router.post("/login", loginController);
 
 export default router;
