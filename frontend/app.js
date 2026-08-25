@@ -1,19 +1,34 @@
-/*
 (() => {
   const RULES = {
     fullName: {
       validate(value) {
         if (!value.trim()) return "Full name is required.";
-        if (value.length > 15)
-          return "Full name must be less than 30 characters.";
+        if (value.length > 50) {
+          return "Full name must be less than 50 characters.";
+        }
+        const fullNamePattern = /^[A-Za-z]+(?:\s+[A-Za-z]+)*$/;
+
+        if (!fullNamePattern.test(value.trim())) {
+          return "Invalid full name.";
+        }
+
         return null;
       },
     },
     email: {
       validate(value) {
-        if (!value.trim()) return "Invalid email address.";
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(value)) return "Invalid email address.";
+        const email = value.trim();
+
+        if (!email) {
+          return "Email address is required.";
+        }
+
+        const emailRegex = /^[A-Za-z0-9._%+-]+@oic\.edu\.np$/;
+
+        if (!emailRegex.test(email)) {
+          return "Only @oic.edu.np email addresses are allowed.";
+        }
+
         return null;
       },
     },
@@ -28,15 +43,13 @@
     faculty: {
       validate(value) {
         if (!value.trim()) return "Faculty is required.";
-        if (value.length > 7)
-          return "Faculty must be at most 7 characters long.";
         return null;
       },
     },
     semester: {
       validate(value) {
         if (!value.trim()) return "Semester is required.";
-        if (value.length > 8) return "Semester must less than 7 characters.";
+        if (value.length > 8) return "Semester must less than 3 characters.";
         return null;
       },
     },
@@ -66,7 +79,116 @@
   const spinner = document.getElementById("spinner");
   const formStatus = document.getElementById("formStatus");
 
+  const toastContainer = document.getElementById("toastContainer");
   const touched = new Set();
+
+  function showToast(message, type = "success", duration = 4000) {
+    if (!toastContainer) return;
+
+    const toast = document.createElement("div");
+
+    const isSuccess = type === "success";
+
+    toast.className = `toast ${isSuccess ? "toast-success" : "toast-error"}`;
+
+    const icon = isSuccess
+      ? `
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M20 6 9 17l-5-5"></path>
+      </svg>
+    `
+      : `
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+    `;
+
+    const title = isSuccess ? "Success" : "Error";
+
+    toast.innerHTML = `
+    <div class="toast-icon">
+      ${icon}
+    </div>
+
+    <div class="toast-content">
+      <p class="toast-title">${title}</p>
+      <p class="toast-message"></p>
+    </div>
+
+    <button
+      type="button"
+      class="toast-close"
+      aria-label="Close notification"
+    >
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  `;
+
+    // Use textContent instead of innerHTML for the message
+    // so user-provided messages cannot inject HTML.
+    toast.querySelector(".toast-message").textContent = message;
+
+    toastContainer.appendChild(toast);
+
+    // Trigger animation
+    requestAnimationFrame(() => {
+      toast.classList.add("show");
+    });
+
+    const removeToast = () => {
+      toast.classList.remove("show");
+      toast.classList.add("hide");
+
+      setTimeout(() => {
+        toast.remove();
+      }, 250);
+    };
+
+    // Close button
+    toast.querySelector(".toast-close").addEventListener("click", removeToast);
+
+    // Automatically remove
+    const timeout = setTimeout(removeToast, duration);
+
+    // Allow mouse hover to pause the timer
+    toast.addEventListener("mouseenter", () => {
+      clearTimeout(timeout);
+    });
+
+    return toast;
+  }
 
   function getInput(fieldId) {
     return document.getElementById(fieldId);
@@ -278,35 +400,32 @@
    * Express backend once the endpoint is available — see the
    * integration notes at the bottom of this file.
    
+**/
 
-  
   async function registerUser(data) {
-    // TODO: connect to backend API
-    // Example of the real implementation:
-    //
-    // const response = await fetch('/api/auth/register', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(data),
-    // });
-    //
-    // const result = await response.json();
-    // if (!response.ok) {
-    //   const error = new Error(result.message || 'Registration failed');
-    //   error.status = response.status;
-    //   error.fieldErrors = result.errors; // shape depends on backend
-    //   throw error;
-    // }
-    // return result;
+    const response = await fetch("http://localhost:3000/api/v1/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-    throw new Error("registerUser() is not yet connected to a backend API.");
+    const result = await response.json();
+    if (!response.ok) {
+      const error = new Error(result.message || "Registration failed");
+      error.status = response.status;
+      error.fieldErrors = result.errors;
+      throw error;
+    }
+
+    return result;
   }
 
   /**
    * Maps backend error responses onto the relevant fields, or
    * falls back to a form-level message. Adjust the shape here
    * once the real API error format is known.
-   
+   **/
+
   function handleServerErrors(error) {
     if (error.status === 400 && error.fieldErrors) {
       Object.entries(error.fieldErrors).forEach(([fieldId, message]) => {
@@ -342,8 +461,6 @@
     event.preventDefault();
     clearFormStatus();
 
-    // Validate every field, mark everything touched so future
-    // edits revalidate live.
     let firstInvalidField = null;
     let hasErrors = false;
 
@@ -374,56 +491,19 @@
 
     setLoading(true);
 
+    localStorage.setItem("email", getInput("email").value.trim());
     try {
-      await registerUser(payload);
-      // TODO: on success, redirect to login or onboarding.
-      // window.location.href = '/login';
+      const res = await registerUser(payload);
+
+      showToast(res.message, "success");
+      setTimeout(() => {
+        window.location.href = "/frontend/pages/verifyOTP.html";
+      }, 2500);
     } catch (error) {
+      localStorage.removeItem("email");
       handleServerErrors(error);
     } finally {
       setLoading(false);
     }
   });
 })();
-*/
-
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        primary: "#4F46E5",
-        primaryHover: "#4338CA",
-        accentLight: "#818CF8",
-        bg: "#F8FAFC",
-        surface: "#FFFFFF",
-        ink: "#0F172A",
-        muted: "#64748B",
-        border: "#E2E8F0",
-        success: "#16A34A",
-        danger: "#DC2626",
-      },
-      fontFamily: {
-        display: ["Sora", "ui-sans-serif", "system-ui", "sans-serif"],
-        body: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-      },
-      keyframes: {
-        floatSlow: {
-          "0%, 100%": {
-            transform: "translateY(0) rotate(var(--tilt, -3deg))",
-          },
-          "50%": {
-            transform: "translateY(-10px) rotate(var(--tilt, -3deg))",
-          },
-        },
-        fadeSlideIn: {
-          "0%": { opacity: "0", transform: "translateY(6px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-      },
-      animation: {
-        floatSlow: "floatSlow 6s ease-in-out infinite",
-        fadeSlideIn: "0.2s ease-out fadeSlideIn",
-      },
-    },
-  },
-};

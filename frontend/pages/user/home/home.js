@@ -1,12 +1,10 @@
-async function loadComponent(id, file) {
-    const element = document.getElementById(id);
+export async function loadComponent(id, file) {
+  const element = document.getElementById(id);
 
-    const response = await fetch(file);
-    const html = await response.text();
-    element.innerHTML = html;
+  const response = await fetch(file);
+  const html = await response.text();
+  element.innerHTML = html;
 }
-
-
 
 loadComponent("navbar", "./customerNavbar.html");
 loadComponent("hero", "hero.html");

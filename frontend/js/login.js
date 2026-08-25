@@ -85,9 +85,7 @@
       validatePassword();
   });
 
-  // ---------------------------------------------------------
-  // Password visibility toggle
-  // ---------------------------------------------------------
+  // Password toogle
   const toggleBtn = document.getElementById("togglePassword");
   const eyeIcon = document.getElementById("eyeIcon");
   const EYE_OPEN =

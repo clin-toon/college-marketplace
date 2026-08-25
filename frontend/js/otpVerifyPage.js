@@ -1,11 +1,4 @@
-/**
- * Campus Marketplace — OTP verification logic
- * -------------------------------------------------------
- * Six independent digit boxes behave like a single 6-digit
- * field: typing advances focus, backspace retreats, arrow
- * keys move between boxes, and pasting a full code fills
- * every box at once.
- */
+import { showToast } from "./utils/toast.js";
 
 (() => {
   "use strict";
@@ -20,13 +13,19 @@
   const verifySpinner = document.getElementById("verifySpinner");
   const resendBtn = document.getElementById("resendBtn");
   const resendLabel = document.getElementById("resendLabel");
+  const getEmailofInitiator = document.getElementById("maskedEmail");
 
   const RESEND_COOLDOWN_SECONDS = 60;
   let resendTimer = null;
 
-  // ---------------------------------------------------------
-  // Box <-> value helpers
-  // ---------------------------------------------------------
+  const getEmailForTheInitiator = () => {
+    const email = localStorage.getItem("email");
+    getEmailofInitiator.innerText = email;
+    return email;
+  };
+
+  getEmailForTheInitiator();
+
   function getCode() {
     return boxes.map((box) => box.value).join("");
   }
@@ -76,13 +75,8 @@
     );
   }
 
-  // ---------------------------------------------------------
-  // Per-box input behavior
-  // ---------------------------------------------------------
   boxes.forEach((box, index) => {
     box.addEventListener("input", () => {
-      // Keep only the last typed digit; number inputs can allow
-      // multi-char paste-like input on some browsers/IMEs.
       box.value = box.value.replace(/[^0-9]/g, "").slice(-1);
 
       if (otpError.classList.contains("flex")) clearError();
@@ -139,9 +133,6 @@
   // Autofocus the first box on load.
   boxes[0].focus();
 
-  // ---------------------------------------------------------
-  // Resend cooldown
-  // ---------------------------------------------------------
   function formatTime(totalSeconds) {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
@@ -187,37 +178,41 @@
 
   startResendCooldown();
 
-  // ---------------------------------------------------------
-  // Verify submit
-  // ---------------------------------------------------------
   function setLoading(isLoading) {
     verifyBtn.disabled = isLoading;
     verifySpinner.classList.toggle("hidden", !isLoading);
     verifyLabel.textContent = isLoading ? "Verifying..." : "Verify Account";
   }
 
-  /**
-   * Placeholder for the real API call. Wire this to the Express
-   * backend once the endpoint is available — see notes below.
-   */
   async function verifyOtp(code) {
-    // TODO: connect to backend API
-    //
-    // const response = await fetch('/api/auth/verify-otp', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ code }),
-    // });
-    //
-    // const result = await response.json();
-    // if (!response.ok) {
-    //   const error = new Error(result.message || 'Verification failed');
-    //   error.status = response.status;
-    //   throw error;
-    // }
-    // return result;
+    let emailId = getEmailForTheInitiator();
 
-    throw new Error("verifyOtp() is not yet connected to a backend API.");
+    if (!emailId) {
+      showError("Please provide email address via sign up page. ");
+      return;
+    }
+
+    const response = await fetch(
+      "http://localhost:3000/api/v1/auth/verify-email",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: emailId,
+          otp: code.toString(),
+        }),
+      },
+    );
+
+    const result = await response.json();
+    if (!response.ok) {
+      const error = new Error(result.message || "Verification failed");
+      error.status = response.status;
+      throw error;
+    }
+    localStorage.removeItem("email");
+
+    return result;
   }
 
   /**
@@ -238,6 +233,7 @@
 
   function handleVerifyError(error) {
     if (error.status === 400) {
+      console.log(error);
       showError("The code you entered is incorrect. Please try again.");
     } else if (error.status === 410) {
       showError("This code has expired. Request a new one below.");
@@ -267,12 +263,15 @@
     setLoading(true);
 
     try {
-      await verifyOtp(code);
+      const data = await verifyOtp(code);
+      showToast("success", "toastContainer", data.message);
       otpSuccess.classList.remove("hidden");
       otpSuccess.classList.add("flex");
       boxes.forEach((box) => (box.disabled = true));
-      // TODO: on success, redirect into the app.
-      // window.location.href = '/onboarding';
+
+      setTimeout(() => {
+        window.location.href = "/frontend/pages/login.html";
+      }, 2500);
     } catch (error) {
       handleVerifyError(error);
       boxes.forEach((box) => (box.value = ""));

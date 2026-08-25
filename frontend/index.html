@@ -156,7 +156,7 @@
                     id="email"
                     name="email"
                     autocomplete="email"
-                    placeholder="you@example.com"
+                    placeholder="Enter your college provided email"
                     class="field-input w-full rounded-lg border border-border bg-white px-4 py-3 text-sm text-ink placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
                     aria-invalid="false"
                     aria-describedby="email-error"
@@ -184,7 +184,7 @@
                     name="phoneNumber"
                     autocomplete="tel"
                     inputmode="numeric"
-                    placeholder="98XXXXXXXX"
+                    placeholder="Enter your phone number"
                     maxlength="10"
                     class="field-input w-full rounded-lg border border-border bg-white px-4 py-3 text-sm text-ink placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
                     aria-invalid="false"
@@ -202,20 +202,30 @@
                   <label
                     for="faculty"
                     class="mb-1.5 block text-sm font-medium text-ink"
-                    >Faculty</label
                   >
-                  <input
-                    type="text"
+                    Faculty
+                  </label>
+
+                  <select
                     id="faculty"
                     name="faculty"
-                    autocomplete="off"
-                    placeholder="e.g. BCT"
-                    maxlength="7"
-                    class="field-input w-full rounded-lg border border-border bg-white px-4 py-3 text-sm text-ink placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
+                    class="field-input w-full rounded-lg border border-border bg-white px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
                     aria-invalid="false"
                     aria-describedby="faculty-error"
                     required
-                  />
+                  >
+                    <option value="" selected disabled>
+                      Select your faculty
+                    </option>
+                    <option value="bsc.csit">Bsc.CSIT</option>
+                    <option value="bim">BIM</option>
+                    <option value="btech ai">Btech.AI</option>
+                    <option value="bit">BIT</option>
+                    <option value="bbm">BBM</option>
+                    <option value="bba">BBA</option>
+                    <option value="bsw">BSW</option>
+                  </select>
+
                   <p
                     id="faculty-error"
                     class="mt-1.5 hidden items-center gap-1 text-xs font-medium text-danger"
@@ -230,20 +240,31 @@
                   <label
                     for="semester"
                     class="mb-1.5 block text-sm font-medium text-ink"
-                    >Semester</label
                   >
-                  <input
-                    type="text"
+                    Semester
+                  </label>
+
+                  <select
                     id="semester"
                     name="semester"
-                    autocomplete="off"
-                    placeholder="e.g. 5th Sem"
-                    maxlength="8"
-                    class="field-input w-full rounded-lg border border-border bg-white px-4 py-3 text-sm text-ink placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
+                    class="field-input w-full rounded-lg border border-border bg-white px-4 py-3 text-sm text-ink focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
                     aria-invalid="false"
                     aria-describedby="semester-error"
                     required
-                  />
+                  >
+                    <option value="" selected disabled>
+                      Select your semester
+                    </option>
+                    <option value="I">I</option>
+                    <option value="II">II</option>
+                    <option value="III">III</option>
+                    <option value="IV">IV</option>
+                    <option value="V">V</option>
+                    <option value="VI">VI</option>
+                    <option value="VII">VII</option>
+                    <option value="VIII">VIII</option>
+                  </select>
+
                   <p
                     id="semester-error"
                     class="mt-1.5 hidden items-center gap-1 text-xs font-medium text-danger"
@@ -346,7 +367,7 @@
                 <p class="text-center text-sm text-muted sm:text-right">
                   Already have an account?
                   <a
-                    href="/login"
+                    href="/frontend/pages/login.html"
                     class="font-medium text-primary hover:text-primaryHover focus:outline-none focus-visible:underline"
                     >Log in</a
                   >
@@ -358,6 +379,15 @@
       </div>
     </div>
 
-    <script src="./app.js"></script>
+    <div
+      id="toastContainer"
+      class="fixed right-5 top-5 z-[9999] flex w-[calc(100%-2.5rem)] max-w-sm flex-col gap-3"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+
+    <script type="module" src="./tailwind.js"></script>
+    <script type="module" src="./app.js"></script>
+    <script type="module" src="./index.js"></script>
   </body>
 </html>

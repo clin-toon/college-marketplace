@@ -3,8 +3,15 @@ import { pool } from "./db/pool";
 import { env } from "./config/env";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import authRoutes from "./modules/auth/auth.routes";
+import cors from "cors";
 const app = express();
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http://127.0.0.1:5500",
+  }),
+);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hi");
