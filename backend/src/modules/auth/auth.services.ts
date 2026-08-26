@@ -3,6 +3,17 @@ import { AppError } from "../../utils/AppError";
 import { generateOtp, hashPassword, validateEmail } from "./auth.helpers";
 import { RegistrationInput } from "./auth.validation";
 import { Resend } from "resend";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { UserRow } from "../../constants/roles";
+import { LoginInput } from "./auth.validation";
+import type { StringValue } from "ms";
+import {
+  signAccessToken,
+  generateRefreshToken,
+  hashToken,
+  REFRESH_TOKEN_TTL_MS,
+} from "../../utils/token";
 
 /*
 This service is responsible for 
@@ -271,3 +282,155 @@ export const verifyEmailOTP = async (email: string, otp: string) => {
     client.release();
   }
 };
+
+/**
+ * This service validates user
+ * provided credentails and provides
+ * approprides response to the user
+ */
+
+export async function loginUser({ email, password }: LoginInput) {
+  const result = await pool.query<UserRow>(
+    `SELECT user_id, email, hashed_password, role, is_verified
+     FROM users
+     WHERE email = $1`,
+    [email],
+  );
+
+  const user = result.rows[0];
+
+  if (!user) {
+    throw new AppError("Invalid email or password", 401);
+  }
+
+  const passwordMatches = await bcrypt.compare(password, user.hashed_password);
+  if (!passwordMatches) {
+    throw new AppError("Invalid email or password", 401);
+  }
+
+  // if (!user.is_verified) {
+  //   throw new AppError("Please verify your email before logging in", 403);
+  // }
+
+  const accessToken = signAccessToken({
+    userId: user.user_id,
+    email: user.email,
+    role: user.role,
+  });
+
+  const refreshToken = await issueRefreshToken(user.user_id);
+
+  return {
+    accessToken,
+    refreshToken,
+    user: { userId: user.user_id, email: user.email, role: user.role },
+  };
+}
+
+async function issueRefreshToken(userId: string): Promise<string> {
+  const rawToken = generateRefreshToken();
+  const tokenHash = hashToken(rawToken);
+  const expiresAt = new Date(Date.now() + REFRESH_TOKEN_TTL_MS);
+
+  await pool.query(
+    `INSERT INTO refresh_tokens (user_id, token_hash, expires_at)
+     VALUES ($1, $2, $3)`,
+    [userId, tokenHash, expiresAt],
+  );
+
+  return rawToken; // raw token goes to the cookie; only the hash is stored
+}
+
+export async function rotateRefreshToken(rawToken: string) {
+  const tokenHash = hashToken(rawToken);
+
+  const result = await pool.query<{
+    token_id: string;
+    user_id: string;
+    expires_at: Date;
+    revoked_at: Date | null;
+  }>(
+    `SELECT token_id, user_id, expires_at, revoked_at
+     FROM refresh_tokens
+     WHERE token_hash = $1`,
+    [tokenHash],
+  );
+
+  const stored = result.rows[0];
+
+  if (!stored || stored.revoked_at || stored.expires_at < new Date()) {
+    // Token reuse/replay or expired token — revoke all of this user's tokens
+    // as a precaution if we can identify them, then reject.
+    if (stored) {
+      await pool.query(
+        `UPDATE refresh_tokens SET revoked_at = now() WHERE user_id = $1 AND revoked_at IS NULL`,
+        [stored.user_id],
+      );
+    }
+    throw new AppError(
+      "Invalid or expired refresh token, please log in again",
+      401,
+    );
+  }
+
+  // Fetch fresh user data (role/verification status may have changed since login)
+  const userResult = await pool.query<UserRow>(
+    `SELECT user_id, email, hashed_password, role, is_verified
+     FROM users WHERE user_id = $1`,
+    [stored.user_id],
+  );
+  const user = userResult.rows[0];
+  if (!user) {
+    throw new AppError("User no longer exists", 401);
+  }
+
+  // Revoke the used token and issue a new one (rotation — limits damage
+  // if a refresh token is ever stolen, since it can only be used once)
+  await pool.query(
+    `UPDATE refresh_tokens SET revoked_at = now() WHERE token_id = $1`,
+    [stored.token_id],
+  );
+
+  const newRefreshToken = await issueRefreshToken(user.user_id);
+  const accessToken = signAccessToken({
+    userId: user.user_id,
+    email: user.email,
+    role: user.role,
+  });
+
+  return {
+    accessToken,
+    refreshToken: newRefreshToken,
+    user: { userId: user.user_id, email: user.email, role: user.role },
+  };
+}
+
+export async function revokeRefreshToken(rawToken: string) {
+  const tokenHash = hashToken(rawToken);
+  await pool.query(
+    `UPDATE refresh_tokens SET revoked_at = now() WHERE token_hash = $1 AND revoked_at IS NULL`,
+    [tokenHash],
+  );
+}
+
+export async function getUserById(userId: string) {
+  const result = await pool.query<UserRow>(
+    `SELECT user_id, email, role, is_verified
+     FROM users
+     WHERE user_id = $1`,
+    [userId],
+  );
+
+  const user = result.rows[0];
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  return {
+    userId: user.user_id,
+    email: user.email,
+    role: user.role,
+    isVerified: user.is_verified,
+  };
+}

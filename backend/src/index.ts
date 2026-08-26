@@ -2,15 +2,18 @@ import express, { Response, Request } from "express";
 import { pool } from "./db/pool";
 import { env } from "./config/env";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
+import cookieParser from "cookie-parser";
 import authRoutes from "./modules/auth/auth.routes";
 import cors from "cors";
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "http://127.0.0.1:5500",
+    origin: "http://localhost:5500",
+    credentials: true,
   }),
 );
 

@@ -1,6 +1,19 @@
-import { Request, RequestHandler, Response } from "express";
-import { registerAccount, verifyEmailOTP } from "./auth.services";
+import { Request, RequestHandler, Response, NextFunction } from "express";
+import {
+  getUserById,
+  loginUser,
+  registerAccount,
+  revokeRefreshToken,
+  rotateRefreshToken,
+  verifyEmailOTP,
+} from "./auth.services";
 import { validateEmail } from "./auth.helpers";
+import {
+  ACCESS_TOKEN_COOKIE,
+  REFRESH_TOKEN_COOKIE,
+  accessTokenCookieOptions,
+  refreshTokenCookieOptions,
+} from "../../config/cookies";
 import { AppError } from "../../utils/AppError";
 
 export const registerController: RequestHandler = async (
@@ -37,4 +50,84 @@ export const verifyEmailController: RequestHandler = async (
   });
 };
 
-export const loginController = (req: Request, res: Response) => {};
+export async function loginController(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const { accessToken, refreshToken, user } = await loginUser(req.body);
+
+    res
+      .cookie(ACCESS_TOKEN_COOKIE, accessToken, accessTokenCookieOptions)
+      .cookie(REFRESH_TOKEN_COOKIE, refreshToken, refreshTokenCookieOptions)
+      .status(200)
+      .json({ message: "Login successful", user });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function refreshController(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const rawToken = req.cookies?.[REFRESH_TOKEN_COOKIE];
+    if (!rawToken) {
+      throw new AppError("Refresh token missing", 401);
+    }
+
+    const { accessToken, refreshToken, user } =
+      await rotateRefreshToken(rawToken);
+
+    res
+      .cookie(ACCESS_TOKEN_COOKIE, accessToken, accessTokenCookieOptions)
+      .cookie(REFRESH_TOKEN_COOKIE, refreshToken, refreshTokenCookieOptions)
+      .status(200)
+      .json({ message: "Token refreshed", user });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function logoutController(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const rawToken = req.cookies?.[REFRESH_TOKEN_COOKIE];
+    if (rawToken) {
+      await revokeRefreshToken(rawToken);
+    }
+
+    res
+      .clearCookie(ACCESS_TOKEN_COOKIE, accessTokenCookieOptions)
+      .clearCookie(REFRESH_TOKEN_COOKIE, refreshTokenCookieOptions)
+      .status(200)
+      .json({ message: "Logged out successfully" });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getMeController(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    if (!req.user) {
+      // Defensive — shouldn't happen since `authenticate` runs first
+      throw new AppError("Not authenticated", 401);
+    }
+
+    const user = await getUserById(req.user.userId);
+
+    res.status(200).json({ user });
+  } catch (err) {
+    next(err);
+  }
+}
