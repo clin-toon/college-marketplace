@@ -9,6 +9,6 @@ async function loadComponent(id, file) {
 
 
 loadComponent("navbar", "./customerNavbar.html");
-loadComponent("hero", "hero.html");
+loadComponent("hero", "./hero.html");
 loadComponent("footer", "./footer.html");
 loadComponent("listings", "./topListings.html");

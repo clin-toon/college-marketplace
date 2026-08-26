@@ -1,4 +1,4 @@
-/*
+
 (() => {
   const RULES = {
     fullName: {
@@ -273,10 +273,7 @@
     formStatus.classList.add("hidden");
   }
 
-  /**
-   * Placeholder for the real API call. Wire this up to the
-   * Express backend once the endpoint is available — see the
-   * integration notes at the bottom of this file.
+  
    
 
   
@@ -306,7 +303,10 @@
    * Maps backend error responses onto the relevant fields, or
    * falls back to a form-level message. Adjust the shape here
    * once the real API error format is known.
-   
+   *
+   * 
+   **/
+
   function handleServerErrors(error) {
     if (error.status === 400 && error.fieldErrors) {
       Object.entries(error.fieldErrors).forEach(([fieldId, message]) => {
@@ -385,7 +385,7 @@
     }
   });
 })();
-*/
+
 
 tailwind.config = {
   theme: {
