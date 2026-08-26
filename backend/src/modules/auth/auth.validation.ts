@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// registration form validation schema
 export const registrationSchema = z.object({
   fullName: z
     .string()
@@ -65,5 +64,17 @@ export const verifyOtpSchema = z.object({
     .regex(/^\d{6}$/, "OTP must be a 6-digit number"),
 });
 
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Invalid email address")
+    .toLowerCase()
+    .trim(),
+
+  password: z.string().min(1, "Password is required"),
+});
+
+export type LoginInput = z.infer<typeof loginSchema>;
 export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>;
 export type RegistrationInput = z.infer<typeof registrationSchema>;
