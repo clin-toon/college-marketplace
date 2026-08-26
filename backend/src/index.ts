@@ -4,6 +4,7 @@ import { env } from "./config/env";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import cookieParser from "cookie-parser";
 import authRoutes from "./modules/auth/auth.routes";
+import listingRoutes from "./modules/listing/listing.routes";
 import cors from "cors";
 const app = express();
 
@@ -22,6 +23,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1", listingRoutes);
 
 // centralized error handler
 app.use(errorHandler);

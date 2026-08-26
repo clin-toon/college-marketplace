@@ -1,3 +1,5 @@
+import { showToast } from "./utils/toast.js";
+
 (() => {
   "use strict";
 
@@ -143,24 +145,21 @@
   }
 
   async function loginUser(credentials) {
-    // TODO: connect to backend API
-    //
-    // const response = await fetch('/api/auth/login', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(credentials),
-    // });
-    //
-    // const result = await response.json().catch(() => ({}));
-    // if (!response.ok) {
-    //   const error = new Error(result.message || 'Login failed');
-    //   error.status = response.status;
-    //   error.code = result.code; // e.g. "ACCOUNT_NOT_VERIFIED"
-    //   throw error;
-    // }
-    // return result;
+    const response = await fetch("http://localhost:3000/api/v1/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+      credentials: "include",
+    });
 
-    throw new Error("loginUser() is not yet connected to a backend API.");
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(result.message || "Login failed");
+      error.status = response.status;
+      error.code = result.code; //
+      throw error;
+    }
+    return result;
   }
 
   /**
@@ -243,15 +242,16 @@
     const credentials = {
       email: emailInput.value.trim(),
       password: passwordInput.value,
-      rememberMe: document.getElementById("rememberMe").checked,
     };
 
     setLoading(true);
 
     try {
-      await loginUser(credentials);
-      // TODO: on success, redirect into the app.
-      // window.location.href = '/marketplace';
+      const res = await loginUser(credentials);
+      showToast("success", "toastContainer", res.message);
+      setInterval(() => {
+        window.location.href = "/frontend/pages/user/home/index.html";
+      }, 1500);
     } catch (error) {
       handleLoginError(error);
     } finally {

@@ -153,7 +153,7 @@
                   id="email"
                   name="email"
                   autocomplete="email"
-                  placeholder="you@example.com"
+                  placeholder="Enter your email address "
                   class="field-input w-full rounded-lg border border-border bg-white px-4 py-3 text-sm text-ink placeholder:text-slate-400 focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
                   aria-invalid="false"
                   aria-describedby="email-error"
@@ -222,17 +222,6 @@
                 ></p>
               </div>
 
-              <label
-                class="flex select-none items-center gap-2 text-sm text-muted"
-              >
-                <input
-                  type="checkbox"
-                  id="rememberMe"
-                  class="h-4 w-4 rounded border-border text-primary focus:outline-none focus:ring-4 focus:ring-primary/10"
-                />
-                Remember me on this device
-              </label>
-
               <button
                 type="submit"
                 id="loginBtn"
@@ -276,6 +265,13 @@
       </div>
     </div>
 
-    <script src=""></script>
+    <div
+      id="toastContainer"
+      class="fixed right-5 top-5 z-[9999] flex w-[calc(100%-2.5rem)] max-w-sm flex-col gap-3"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+
+    <script type="module" src="../js//login.js"></script>
   </body>
 </html>

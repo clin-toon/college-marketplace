@@ -1,4 +1,22 @@
-export async function loadComponent(id, file) {
+import { requireAuth } from "../../../routeMiddleware.js";
+
+(async function init() {
+  const user = await requireAuth();
+  if (!user) return;
+
+  document.getElementById("user-email").textContent = user.email;
+  document.getElementById("app").style.display = "block";
+
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+    await fetch(`${API_BASE}/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+    window.location.href = "/frontend/pages/login.html";
+  });
+})();
+
+async function loadComponent(id, file) {
   const element = document.getElementById(id);
 
   const response = await fetch(file);
