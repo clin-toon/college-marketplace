@@ -4,6 +4,8 @@ export interface ListingResponse {
   listingId: string;
   sellerId: string;
   sellerEmail: string;
+  sellerFaculty?: string;
+  sellerSemester?: string;
   categoryId: string;
   categoryName: string;
   title: string;
@@ -22,6 +24,8 @@ export interface ListingRow {
   seller_id: string;
   seller_email: string;
   category_id: string;
+  seller_faculty?: string;
+  seller_semester?: string;
   category_name: string;
   seller_full_name: string;
   title: string;
@@ -43,3 +47,23 @@ export const SORT_MAP: Record<ListingQuery["sort"], string> = {
   az: "l.title ASC",
   za: "l.title DESC",
 };
+export interface ListingDetailRow {
+  listing_id: string;
+  seller_id: string;
+  seller_email: string;
+  seller_full_name: string | null;
+  seller_profile_image_url: string | null;
+  seller_phone: string | null;
+  category_id: string;
+  category_name: string;
+  title: string;
+  description: string | null;
+  price: string;
+  condition: ListingResponse["condition"];
+  status: ListingResponse["status"];
+  created_at: Date;
+  updated_at: Date;
+  seller_faculty: string;
+  seller_semester: string;
+  images: string[];
+}

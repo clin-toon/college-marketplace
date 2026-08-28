@@ -54,4 +54,10 @@ export const listingQuerySchema = z
     },
   );
 
+export const listingIdParamSchema = z.object({
+  id: z.string().uuid("Invalid listing id"),
+});
+
+export type ListingIdParam = z.infer<typeof listingIdParamSchema>;
+
 export type ListingQuery = z.infer<typeof listingQuerySchema>;

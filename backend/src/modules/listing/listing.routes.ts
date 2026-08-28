@@ -1,14 +1,18 @@
 import { Router } from "express";
-import { getListingsFilterController } from "./listing.controllers";
+import {
+  getListingDetailController,
+  getListingsFilterController,
+} from "./listing.controllers";
 import { authenticate } from "../../middlewares/auth.middleware";
 import { validate } from "../../middlewares/validate.middleware";
-import { listingQuerySchema } from "./listing.schema";
+import { listingIdParamSchema } from "./listing.schema";
 const router = Router();
 
+router.get("/listings", authenticate, getListingsFilterController);
 router.get(
-  "/listings",
-  validate({ body: listingQuerySchema }),
-  getListingsFilterController,
+  "/listings/:id",
+  validate({ params: listingIdParamSchema }),
+  getListingDetailController,
 );
 
 export default router;

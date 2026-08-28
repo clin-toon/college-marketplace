@@ -1,13 +1,15 @@
+import { generateOtp, validateEmail } from "./auth.helpers";
 import { Request, RequestHandler, Response, NextFunction } from "express";
 import {
   getUserById,
   loginUser,
   registerAccount,
+  reSendOTPService,
   revokeRefreshToken,
   rotateRefreshToken,
   verifyEmailOTP,
 } from "./auth.services";
-import { validateEmail } from "./auth.helpers";
+
 import {
   ACCESS_TOKEN_COOKIE,
   REFRESH_TOKEN_COOKIE,
@@ -25,6 +27,27 @@ export const registerController: RequestHandler = async (
     success: true,
     message:
       "Registration successful. Please verify the OTP sent to your email.",
+  });
+};
+
+export const resendOTPController: RequestHandler = async (
+  req: Request,
+  res: Response,
+) => {
+  const { email } = req.body;
+  console.log(email);
+
+  if (!validateEmail(email)) {
+    throw new AppError(
+      " Invalid email. Please use an email address with the 'oic.edu.np' domain.",
+      400,
+    );
+  }
+
+  await reSendOTPService(email);
+  return res.status(200).json({
+    success: true,
+    message: "OTP resent. Please verify the OTP sent to your email.",
   });
 };
 

@@ -30,9 +30,6 @@ export function verifyAccessToken(token: string): AccessTokenPayload {
   return jwt.verify(token, ACCESS_TOKEN_SECRET) as AccessTokenPayload;
 }
 
-// Refresh token is a random opaque string, NOT a JWT.
-// Simpler to revoke server-side and avoids double-parsing JWTs for something
-// that's just a lookup key.
 export function generateRefreshToken(): string {
   return crypto.randomBytes(64).toString("hex");
 }

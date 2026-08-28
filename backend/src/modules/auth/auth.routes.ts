@@ -6,12 +6,14 @@ import {
   refreshController,
   logoutController,
   getMeController,
+  resendOTPController,
 } from "./auth.controllers";
 import { validate } from "../../middlewares/validate.middleware";
 import {
   registrationSchema,
   verifyOtpSchema,
   loginSchema,
+  reSendOTPSchema,
 } from "./auth.validation";
 import { authenticate } from "../../middlewares/auth.middleware";
 
@@ -28,6 +30,7 @@ router.post(
   verifyEmailController,
 );
 
+router.post("/resend-otp", resendOTPController);
 router.post("/login", validate({ body: loginSchema }), loginController);
 router.post("/refresh", authenticate, refreshController);
 router.post("/logout", authenticate, logoutController);

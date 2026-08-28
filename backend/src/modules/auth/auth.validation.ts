@@ -35,7 +35,7 @@ export const registrationSchema = z.object({
       "Phone number must be exactly 10 digits and start with 9.",
     ),
 
-  faculty: z.enum(["bsc.csit", "bim", "bba", "bbm", "bsw", "bit", "btech ai"]),
+  faculty: z.enum(["BIM", "Bsc.CSIT", "BBA", "BBM", "BIT", "B.TECH.AI", "BSW"]),
 
   semester: z
     .string()
@@ -64,6 +64,16 @@ export const verifyOtpSchema = z.object({
     .regex(/^\d{6}$/, "OTP must be a 6-digit number"),
 });
 
+export const reSendOTPSchema = z
+  .string()
+  .trim()
+  .min(1, "Email is required")
+  .email("Enter a valid email address")
+  .refine(
+    (value) => value.toLowerCase().endsWith(`@oic.edu.np}`),
+    `Email must be a college address ending in @oic.edu.np`,
+  );
+
 export const loginSchema = z.object({
   email: z
     .string()
@@ -78,3 +88,4 @@ export const loginSchema = z.object({
 export type LoginInput = z.infer<typeof loginSchema>;
 export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>;
 export type RegistrationInput = z.infer<typeof registrationSchema>;
+export type resendOTPInput = z.infer<typeof reSendOTPSchema>;

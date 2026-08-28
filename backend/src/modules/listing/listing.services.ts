@@ -1,6 +1,8 @@
 import { pool } from "../../db/pool";
 import { ListingRow, SORT_MAP, ListingResponse } from "./listing.types";
 import { ListingQuery } from "./listing.schema";
+import { ListingDetailRow } from "./listing.types";
+import { AppError } from "../../utils/AppError";
 
 /**
  * This service handles search and query
@@ -46,7 +48,6 @@ export async function getAllListings(filters: ListingQuery) {
   const limitParamIndex = params.length;
   params.push(offset);
   const offsetParamIndex = params.length;
-  console.log(params);
 
   const result = await pool.query<ListingRow>(
     `SELECT
@@ -54,6 +55,8 @@ export async function getAllListings(filters: ListingQuery) {
        l.seller_id,
        u.email AS seller_email,
        up.full_name AS seller_full_name,
+       up.faculty AS seller_faculty,
+       up.semester AS seller_semester,
        l.category_id,
        c.name AS category_name,
        l.title,
@@ -75,7 +78,7 @@ export async function getAllListings(filters: ListingQuery) {
      INNER JOIN categories c ON c.category_id = l.category_id
      LEFT JOIN listing_images li ON li.listing_id = l.listing_id
      ${whereClause}
-     GROUP BY l.listing_id, u.email, up.full_name, c.name
+     GROUP BY l.listing_id, u.email, up.full_name, c.name, up.faculty, up.semester
      ORDER BY ${orderClause}
      LIMIT $${limitParamIndex} OFFSET $${offsetParamIndex}`,
     params,
@@ -100,6 +103,8 @@ function toListingResponse(row: ListingRow): ListingResponse {
     listingId: row.listing_id,
     sellerId: row.seller_id,
     sellerEmail: row.seller_email,
+    sellerSemester: row.seller_semester,
+    sellerFaculty: row.seller_faculty,
     categoryId: row.category_id,
     categoryName: row.category_name,
     title: row.title,
@@ -111,5 +116,68 @@ function toListingResponse(row: ListingRow): ListingResponse {
     images: row.images,
     createdAt: row.created_at as unknown as string,
     updatedAt: row.updated_at as unknown as string,
+  };
+}
+
+export async function getListingById(listingId: string | string[]) {
+  const result = await pool.query<ListingDetailRow>(
+    `SELECT
+       l.listing_id,
+       l.seller_id,
+       u.email AS seller_email,
+       up.full_name AS seller_full_name,
+       up.profile_image_url AS seller_profile_image_url,
+       up.phone AS seller_phone,
+       l.category_id,
+       c.name AS category_name,
+       l.title,
+       l.description,
+       l.price,
+       l.condition,
+       l.status,
+       l.created_at,
+       l.updated_at,
+       COALESCE(
+         json_agg(li.image_url ORDER BY li.created_at)
+         FILTER (WHERE li.image_url IS NOT NULL),
+         '[]'
+       ) AS images
+     FROM listings l
+     INNER JOIN users u ON u.user_id = l.seller_id
+     LEFT JOIN user_profile up ON up.user_id = u.user_id
+     INNER JOIN categories c ON c.category_id = l.category_id
+     LEFT JOIN listing_images li ON li.listing_id = l.listing_id
+     WHERE l.listing_id = $1
+     GROUP BY l.listing_id, u.email, up.full_name, up.profile_image_url, up.phone, c.name`,
+    [listingId],
+  );
+
+  const row = result.rows[0];
+
+  if (!row) {
+    throw new AppError("Listing not found", 404);
+  }
+
+  return toListingDetailResponse(row);
+}
+
+function toListingDetailResponse(row: ListingDetailRow) {
+  return {
+    listingId: row.listing_id,
+    sellerId: row.seller_id,
+    sellerEmail: row.seller_email,
+    sellerFullName: row.seller_full_name,
+    sellerProfileImageUrl: row.seller_profile_image_url,
+    sellerPhone: row.seller_phone,
+    categoryId: row.category_id,
+    categoryName: row.category_name,
+    title: row.title,
+    description: row.description,
+    price: row.price,
+    condition: row.condition,
+    status: row.status,
+    images: row.images,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
   };
 }

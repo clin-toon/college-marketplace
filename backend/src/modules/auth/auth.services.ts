@@ -82,6 +82,22 @@ const sendOTPinEmail = async (email: string, otpCode: string) => {
   return data;
 };
 
+export const reSendOTPService = async (email: string) => {
+  const otp = generateOtp();
+  await sendOTPinEmail(email, otp);
+  const otpQuery = `
+    INSERT INTO email_verifications (
+      email_id,
+      otp,
+      expires_at
+    )
+    VALUES ($1, $2, NOW() + INTERVAL '5 minutes')
+    RETURNING *;
+  `;
+
+  const otpRes = await pool.query(otpQuery, [email, otp]);
+};
+
 /*
 This service checks whether there is already user registered
 or not with the provided email
