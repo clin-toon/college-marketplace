@@ -9,7 +9,7 @@ export type Faculty =
 
 export type Semester = "I" | "II" | "III" | "IV" | "V" | "VI" | "VII" | "VIII";
 
-export type UserRole = "public" | "user" | "admin";
+export type UserRole = "public" | "student" | "admin";
 
 export interface SignupPayload {
   fullName: string;
@@ -32,10 +32,9 @@ export interface OtpPayload {
 
 export interface AuthUser {
   id: string;
-  fullName: string;
   email: string;
-  faculty: Faculty;
-  semester: Semester;
+  isVerified: boolean;
+
   role: UserRole;
 }
 

@@ -85,7 +85,7 @@ export async function loginController(
       .cookie(ACCESS_TOKEN_COOKIE, accessToken, accessTokenCookieOptions)
       .cookie(REFRESH_TOKEN_COOKIE, refreshToken, refreshTokenCookieOptions)
       .status(200)
-      .json({ message: "Login successful", user });
+      .json({ success: true, message: "Login successful", user });
   } catch (err) {
     next(err);
   }
@@ -149,7 +149,7 @@ export async function getMeController(
 
     const user = await getUserById(req.user.userId);
 
-    res.status(200).json({ user });
+    res.status(200).json({ data: user });
   } catch (err) {
     next(err);
   }

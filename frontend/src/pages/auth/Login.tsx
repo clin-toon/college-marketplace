@@ -16,11 +16,11 @@ export default function Login() {
   return (
     <AuthLayout
       eyebrow="Welcome back"
-      title="Log in to Quad"
+      title="Log in to College Marketplace"
       subtitle="Enter your college credentials to continue."
       footer={
         <p className="text-center text-sm text-ink-soft">
-          New to Quad?{" "}
+          New to College Marketplace?{" "}
           <Link
             to="/signup"
             className="font-semibold text-white hover:underline underline"
@@ -34,7 +34,7 @@ export default function Login() {
         <TextField
           label="College email"
           type="email"
-          placeholder="yourname@oic.edu.np"
+          placeholder="Enter your college provided email"
           icon={<HiOutlineEnvelope className="h-4.5 w-4.5" />}
           error={errors.email?.message}
           {...register("email")}
@@ -50,7 +50,7 @@ export default function Login() {
           <div className="flex justify-end">
             <Link
               to="/forgot-password"
-              className="text-xs font-medium text-ink-soft hover:text-quad"
+              className="text-xs font-medium text-white hover:text-shadow-white underline"
             >
               Forgot password?
             </Link>

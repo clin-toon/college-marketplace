@@ -23,13 +23,16 @@ export function useLogin() {
     setIsSubmitting(true);
     try {
       const result = await loginRequest(values);
+      console.log(result);
       if (!result.success) {
         toast.error(result.message);
         return;
       }
       toast.success(result.message);
 
-      navigate("/home");
+      setTimeout(() => {
+        window.location.replace("/home");
+      }, 1000);
     } catch (error: any) {
       toast.error(error.message || "Something went wrong ");
     } finally {

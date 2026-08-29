@@ -445,6 +445,7 @@ export async function getUserById(userId: string) {
 
   return {
     userId: user.user_id,
+
     email: user.email,
     role: user.role,
     isVerified: user.is_verified,

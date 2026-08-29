@@ -42,6 +42,7 @@ export async function loginRequest(
   });
 
   const result = await response.json();
+
   if (!response.ok) {
     const error = new Error(result.message || "Registration failed");
     throw error;

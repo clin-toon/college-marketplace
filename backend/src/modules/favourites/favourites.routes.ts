@@ -11,7 +11,6 @@ import {
 
 const router = Router();
 
-// every favourites route requires a logged-in user
 router.use(authenticate);
 
 router.get("/favourites", getFavouritesHandler);
