@@ -51,7 +51,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
             favorited ? "Remove from favourites" : "Add to favourites"
           }
           aria-pressed={favorited}
-          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-void/50 text-white backdrop-blur-md ring-1 ring-white/[0.12] transition-transform duration-150 hover:scale-110"
+          className="absolute right-3 top-3 cursor-pointer flex h-8 w-8 items-center justify-center rounded-full bg-void/50 text-white backdrop-blur-md ring-1 ring-white/[0.12] transition-transform duration-150 hover:scale-110"
         >
           {favorited ? (
             <HiHeart className="h-4 w-4 text-red-500" />

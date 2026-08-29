@@ -82,7 +82,7 @@ export default function ListingDetail() {
                   favorited ? "Remove from favourites" : "Add to favourites"
                 }
                 aria-pressed={favorited}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/[0.04] text-app-text-muted ring-1 ring-white/[0.08] transition-transform hover:scale-110"
+                className="flex cursor-pointer h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/[0.04] text-app-text-muted ring-1 ring-white/[0.08] transition-transform hover:scale-110"
               >
                 {favorited ? (
                   <HiHeart className="h-5 w-5 text-red-500" />
