@@ -25,7 +25,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1", listingRoutes);
+app.use("/api/v1/listings", listingRoutes);
 app.use("/api/v1", favouriteRoutes);
 
 // centralized error handler

@@ -19,6 +19,20 @@ export interface ListingResponse {
   updatedAt: string;
 }
 
+export interface OwnListingRow {
+  listing_id: string;
+  category_id: string;
+  category_name: string;
+  title: string;
+  description: string | null;
+  price: string;
+  condition: string;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+  images: string[];
+}
+
 export interface ListingRow {
   listing_id: string;
   seller_id: string;
