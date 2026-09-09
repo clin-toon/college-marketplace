@@ -1,13 +1,20 @@
 import {
   HiOutlineEnvelope,
   HiOutlinePhone,
-  HiOutlinePaperAirplane,
+  HiOutlineChatBubbleLeftRight,
 } from "react-icons/hi2";
-import { useContactSeller } from "@/features/listings/hooks/useContactSeller";
-import type { ListingDetail } from "@/types/listings";
+import { useOpenChat } from "@/features/chat/hooks/useOpenChat";
+import type { ListingDetail } from "@/types/listing";
 
 export function SellerCard({ listing }: { listing: ListingDetail }) {
-  const { isSending, sent, sendRequest } = useContactSeller(listing.listingId);
+  const { openChat } = useOpenChat();
+
+  function handleContact() {
+    openChat(listing.listingId, listing.sellerId, {
+      listingTitle: listing.title,
+      otherUserName: listing.sellerFullName,
+    });
+  }
 
   return (
     <div className="glass-surface flex flex-col gap-4 rounded-2xl p-5">
@@ -45,17 +52,11 @@ export function SellerCard({ listing }: { listing: ListingDetail }) {
       </div>
 
       <button
-        onClick={sendRequest}
-        disabled={isSending || sent}
-        className="mt-1 cursor-pointer flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-brand-blue to-blue-700 px-4 py-2.5 font-display text-[13.5px] font-semibold text-white shadow-[0_1px_0_0_rgba(255,255,255,0.15)_inset,0_8px_20px_-8px_rgba(59,130,246,0.5)] ring-1 ring-white/[0.08] transition-all duration-150 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+        onClick={handleContact}
+        className="mt-1 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-brand-blue to-blue-700 px-4 py-2.5 font-display text-[13.5px] font-semibold text-white shadow-[0_1px_0_0_rgba(255,255,255,0.15)_inset,0_8px_20px_-8px_rgba(59,130,246,0.5)] ring-1 ring-white/[0.08] transition-all duration-150 hover:-translate-y-0.5"
       >
-        {isSending && (
-          <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-        )}
-        {!isSending && <HiOutlinePaperAirplane className="h-3.5 w-3.5" />}
-        <span>
-          {sent ? "Request sent" : isSending ? "Sending…" : "Contact seller"}
-        </span>
+        <HiOutlineChatBubbleLeftRight className="h-3.5 w-3.5" />
+        <span>Contact seller</span>
       </button>
     </div>
   );

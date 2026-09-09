@@ -17,9 +17,8 @@ import {
 
 /*
 This service is responsible for 
-sending OTP code in the provided emails
+sending OTP code in the provided email
 */
-
 const sendOTPinEmail = async (email: string, otpCode: string) => {
   const resend = new Resend(process.env.API_KEY);
 
@@ -82,6 +81,11 @@ const sendOTPinEmail = async (email: string, otpCode: string) => {
   return data;
 };
 
+/**
+ * This service re sends the OTP in email after
+ * 1 minutes if clicked by the user.
+ * @param email
+ */
 export const reSendOTPService = async (email: string) => {
   const otp = generateOtp();
   await sendOTPinEmail(email, otp);
@@ -102,11 +106,9 @@ export const reSendOTPService = async (email: string) => {
 This service checks whether there is already user registered
 or not with the provided email
 */
-
 export const checkIfUserExists = async (email: string) => {
   const query = `SELECT * from users where email = $1`;
   const res = await pool.query(query, [email]);
-
   if (res.rowCount !== 0) {
     throw new AppError("User with this email already exists. ", 400);
   }
@@ -324,9 +326,9 @@ export async function loginUser({ email, password }: LoginInput) {
     throw new AppError("Invalid email or password", 401);
   }
 
-  // if (!user.is_verified) {
-  //   throw new AppError("Please verify your email before logging in", 403);
-  // }
+  if (!user.is_verified) {
+    throw new AppError("Please verify your email before logging in", 403);
+  }
 
   const accessToken = signAccessToken({
     userId: user.user_id,

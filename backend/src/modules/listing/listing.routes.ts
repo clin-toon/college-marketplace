@@ -49,7 +49,7 @@ router.post(
 
 router.get("/details/mine", authenticate, getMyListingsHandler);
 
-router.put(
+router.patch(
   "/:id",
   authenticate,
   uploadListingImages,

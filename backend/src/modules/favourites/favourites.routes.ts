@@ -1,4 +1,3 @@
-// routes/favourite.routes.ts
 import { Router } from "express";
 import { authenticate } from "../../middlewares/auth.middleware";
 import { validate } from "../../middlewares/validate.middleware";

@@ -14,7 +14,9 @@ import {
 
 /**
  * This service handles search and query
- * parameters if provided
+ * parameters if provided dynamically
+ * It constructs dynamic sql query to communicate with the
+ * database and
  * Returns all the data if nothing is provided
  */
 
@@ -127,6 +129,13 @@ function toListingResponse(row: ListingRow): ListingResponse {
   };
 }
 
+/**
+ *
+ * @param listingId
+ * This service is responsible to fetch the data according to the
+ * listing id to the function
+ * @returns
+ */
 export async function getListingById(listingId: string | string[]) {
   const result = await pool.query<ListingDetailRow>(
     `SELECT
@@ -187,7 +196,6 @@ async function resolveCategoryId(categoryName: string): Promise<string> {
  * This service create a listing and creates new database records
  * File is uploaded to cloudinary
  */
-
 export async function createListing(
   sellerId: string,
   data: CreateListingInput,
@@ -258,6 +266,13 @@ export async function createListing(
   }
 }
 
+/**
+ * This service is responsible for sending
+ * the listings of the specific user based on
+ * the seller id
+ * @param sellerId
+ * @returns
+ */
 export async function getMyListings(sellerId: string) {
   const result = await pool.query<OwnListingRow>(
     `SELECT
@@ -288,6 +303,16 @@ export async function getMyListings(sellerId: string) {
   return result.rows;
 }
 
+/**
+ * This service is responsible to update the provided list
+ * based on the body provided by the front end and also update the images
+ * It sends the updated list as the response
+ * @param listingId
+ * @param userId
+ * @param data
+ * @param newFiles
+ * @returns
+ */
 export async function updateListing(
   listingId: string,
   userId: string,
@@ -441,6 +466,16 @@ export async function deleteListing(listingId: string, userId: string) {
 
   // Best-effort Cloudinary cleanup after DB delete succeeds
   await Promise.allSettled(urls.map((url) => deleteFromCloudinary(url)));
+}
+
+export async function getListingSellerId(
+  listingId: string,
+): Promise<string | null> {
+  const result = await pool.query<{ seller_id: string }>(
+    `SELECT seller_id FROM listings WHERE listing_id = $1`,
+    [listingId],
+  );
+  return result.rows[0]?.seller_id ?? null;
 }
 
 function toListingDetailResponse(row: ListingDetailRow) {

@@ -31,7 +31,8 @@ export interface OtpPayload {
 }
 
 export interface AuthUser {
-  id: string;
+  userId: string;
+
   email: string;
   isVerified: boolean;
 

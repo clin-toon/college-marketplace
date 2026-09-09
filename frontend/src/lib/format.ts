@@ -34,3 +34,13 @@ export function formatStatus(status: string): string {
 export function statusBadgeClasses(status: string): string {
   return STATUS_CLASSES[status] ?? STATUS_CLASSES.inactive;
 }
+
+export function formatDate(isoString: string): string {
+  const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) return isoString;
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+}

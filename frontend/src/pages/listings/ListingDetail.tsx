@@ -11,15 +11,17 @@ import { SellerCard } from "@/components/listings/SellerCard";
 import { ListingCardSkeleton } from "@/components/listings/ListingCardSkeleton";
 import { StatePanel } from "@/components/ui/StatePanel";
 import { useListingDetail } from "@/features/listings/hooks/useListingDetail";
-import { useFavoriteToggle } from "@/features/listings/hooks/useFavoriteToggle";
+
 import {
   formatCondition,
   formatPrice,
   formatStatus,
   statusBadgeClasses,
 } from "@/lib/format";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ListingDetail() {
+  const { user } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const { listing, isLoading, error, retry } = useListingDetail(id);

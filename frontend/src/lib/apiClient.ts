@@ -27,18 +27,22 @@ async function request<T>(
   options: RequestOptions = {},
 ): Promise<T> {
   const { body, silent, headers, ...rest } = options;
+  const isFormData =
+    typeof FormData !== "undefined" && body instanceof FormData;
 
   let response: Response;
-  console.log(`${API_BASE_URL}${path}`);
   try {
     response = await fetch(`${API_BASE_URL}${path}`, {
       ...rest,
       credentials: "include", // sends the httpOnly access-token cookie
-      headers: {
-        "Content-Type": "application/json",
-        ...headers,
-      },
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      headers: isFormData
+        ? { ...headers } // let the browser set the multipart boundary itself
+        : { "Content-Type": "application/json", ...headers },
+      body: isFormData
+        ? (body as FormData)
+        : body !== undefined
+          ? JSON.stringify(body)
+          : undefined,
     });
   } catch {
     const message = "Can't reach the server. Check your connection.";

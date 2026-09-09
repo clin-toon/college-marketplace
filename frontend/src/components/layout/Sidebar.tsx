@@ -5,8 +5,8 @@ import {
   HiOutlineSquares2X2,
   HiOutlineClipboardDocumentList,
   HiOutlineHeart,
-  HiOutlineEnvelopeOpen,
   HiOutlineBell,
+  HiOutlineChatBubbleLeftRight,
   HiOutlineArrowRightOnRectangle,
 } from "react-icons/hi2";
 import { cn } from "@/lib/cn";
@@ -21,11 +21,7 @@ const NAV_ITEMS = [
     icon: HiOutlineClipboardDocumentList,
   },
   { to: "/favourites", label: "Favourites", icon: HiOutlineHeart },
-  {
-    to: "/contact-requests",
-    label: "Contact Requests",
-    icon: HiOutlineEnvelopeOpen,
-  },
+  { to: "/messages", label: "Messages", icon: HiOutlineChatBubbleLeftRight },
   { to: "/notifications", label: "Notifications", icon: HiOutlineBell },
 ];
 

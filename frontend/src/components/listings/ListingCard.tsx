@@ -9,13 +9,25 @@ import { cn } from "@/lib/cn";
 import { formatCondition, formatPrice } from "@/lib/format";
 import { useFavourites } from "@/context/FavouritesContext";
 import type { Listing } from "@/types/listing";
+import { useAuth } from "@/context/AuthContext";
 
 export function ListingCard({ listing }: { listing: Listing }) {
   const navigate = useNavigate();
   const { isFavorite, toggleFavorite } = useFavourites();
   const image = listing.images[0];
-
+  const { user } = useAuth();
+  const buttonText =
+    user?.userId === listing.sellerId ? "Manage" : "View Details";
   const favorited = isFavorite(listing.listingId);
+
+  const handleNavigate = () => {
+    const navURL =
+      user?.userId === listing.sellerId
+        ? `/my-listings/${listing.listingId}`
+        : `/listings/${listing.listingId}`;
+
+    navigate(navURL);
+  };
 
   return (
     <div
@@ -45,21 +57,22 @@ export function ListingCard({ listing }: { listing: Listing }) {
 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-void/70 via-transparent to-transparent" />
 
-        <button
-          onClick={() => toggleFavorite(listing.listingId)}
-          aria-label={
-            favorited ? "Remove from favourites" : "Add to favourites"
-          }
-          aria-pressed={favorited}
-          className="absolute right-3 top-3 cursor-pointer flex h-8 w-8 items-center justify-center rounded-full bg-void/50 text-white backdrop-blur-md ring-1 ring-white/[0.12] transition-transform duration-150 hover:scale-110"
-        >
-          {favorited ? (
-            <HiHeart className="h-4 w-4 text-red-500" />
-          ) : (
-            <HiOutlineHeart className="h-4 w-4" />
-          )}
-        </button>
-
+        {listing.sellerId != user?.userId && (
+          <button
+            onClick={() => toggleFavorite(listing.listingId)}
+            aria-label={
+              favorited ? "Remove from favourites" : "Add to favourites"
+            }
+            aria-pressed={favorited}
+            className="absolute right-3 top-3 cursor-pointer flex h-8 w-8 items-center justify-center rounded-full bg-void/50 text-white backdrop-blur-md ring-1 ring-white/[0.12] transition-transform duration-150 hover:scale-110"
+          >
+            {favorited ? (
+              <HiHeart className="h-4 w-4 text-red-500" />
+            ) : (
+              <HiOutlineHeart className="h-4 w-4" />
+            )}
+          </button>
+        )}
         <span className="absolute bottom-3 left-3 rounded-lg bg-void/60 px-2.5 py-1 font-mono text-[13px] font-semibold text-cyan backdrop-blur-md ring-1 ring-white/[0.1]">
           {formatPrice(listing.price)}
         </span>
@@ -86,7 +99,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
         </div>
 
         <button
-          onClick={() => navigate(`/listings/${listing.listingId}`)}
+          onClick={handleNavigate}
           className={cn(
             "mt-1 flex w-full items-center justify-center gap-1.5 rounded-xl px-4 py-2.5",
             "bg-gradient-to-b from-brand-blue to-blue-700 font-display cursor-pointer text-[13.5px] font-semibold text-white",
@@ -96,7 +109,7 @@ export function ListingCard({ listing }: { listing: Listing }) {
             "active:translate-y-0",
           )}
         >
-          <span>View details</span>
+          <span>{buttonText}</span>
           <HiOutlineArrowUpRight className="h-3.5 w-3.5" />
         </button>
       </div>
