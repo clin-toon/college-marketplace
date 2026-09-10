@@ -43,16 +43,19 @@ export function useChatSocket(
       );
     }
 
+    // looker
     function handleConnect() {
+      console.log("Connected to socket server. ");
       setIsConnected(true);
       join();
     }
     function handleDisconnect() {
+      console.log("Disconnected to socket server. ");
       setIsConnected(false);
       setIsJoined(false);
     }
     function handleMessage(message: ChatMessage) {
-      console.log("[LIVE]", JSON.stringify(message)); // DEBUG
+      // console.log("[LIVE]", JSON.stringify(message));
       onMessageRef.current(message);
     }
 
@@ -93,8 +96,6 @@ export function useChatSocket(
         },
         (ack: SendAck) => {
           if (ack?.success && ack.message) {
-            // Server excludes the sender from the room broadcast,
-            // so the sender adds their own message here.
             onMessageRef.current(ack.message);
           } else {
             toast.error(

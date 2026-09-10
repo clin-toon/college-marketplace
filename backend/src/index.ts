@@ -8,6 +8,7 @@ import listingRoutes from "./modules/listing/listing.routes";
 import favouriteRoutes from "./modules/favourites/favourites.routes";
 import categoryRoutes from "./modules/categories/categories.route";
 import messageRoutes from "./modules/message/message.routes";
+import adminRoutes from "./modules/admin/admin.routes";
 
 import cors from "cors";
 import http from "http";
@@ -37,6 +38,10 @@ app.use("/api/v1/listings", listingRoutes);
 app.use("/api/v1", favouriteRoutes);
 app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/v1/", messageRoutes);
+
+// admin only routes`
+
+app.use("/api/v1", adminRoutes);
 
 // centralized error handler
 app.use(errorHandler);

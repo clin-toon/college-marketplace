@@ -31,9 +31,6 @@ export function ChatThreadPanel({
   const location = useLocation();
   const { user } = useAuth();
 
-  // A brand-new conversation (first message ever) won't be in the inbox list
-  // yet, so fall back to whatever the sender (SellerCard or this same panel's
-  // own links) passed as navigation state.
   const navState = (location.state as ChatLocationState | null) ?? {};
   const headerName = conversation?.otherUserName ?? navState.otherUserName;
   const headerListingTitle =
