@@ -1,75 +1,47 @@
-// @/pages/admin/AdminHome.tsx
-import { FiUsers, FiGrid, FiTrendingUp, FiArrowUpRight } from "react-icons/fi";
+import { useAdminStats } from "@/features/admin/hooks/useAdminStats";
+import StatsDashboard from "@/components/admin/StatsDashboard";
 
-const stats = [
-  {
-    label: "Total Users",
-    value: "1,248",
-    change: "+12%",
-    icon: FiUsers,
-    gradient: "from-indigo-500 to-violet-600",
-  },
-  {
-    label: "Active Listings",
-    value: "342",
-    change: "+8%",
-    icon: FiGrid,
-    gradient: "from-emerald-500 to-teal-600",
-  },
-  {
-    label: "Monthly Growth",
-    value: "23%",
-    change: "+4%",
-    icon: FiTrendingUp,
-    gradient: "from-amber-500 to-orange-600",
-  },
-];
+export default function AdminDashboardPage() {
+  const { stats, isLoading, error, refetch } = useAdminStats();
 
-export default function AdminHome() {
   return (
-    <div className="space-y-8">
-      {/* Page header */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-          Dashboard
-        </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Welcome back — here's what's happening today.
-        </p>
-      </div>
-
-      {/* Stat cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {stats.map(({ label, value, change, icon: Icon, gradient }) => (
-          <div
-            key={label}
-            className="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+    <div>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
+        {stats && (
+          <button
+            onClick={refetch}
+            className="rounded-lg border bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm hover:bg-slate-50"
           >
-            <div className="flex items-start justify-between">
-              <div
-                className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br ${gradient} text-white shadow-lg`}
-              >
-                <Icon className="h-5 w-5" />
-              </div>
-              <span className="flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-600">
-                <FiArrowUpRight className="h-3 w-3" />
-                {change}
-              </span>
-            </div>
-            <p className="mt-4 text-3xl font-bold tracking-tight text-slate-900">
-              {value}
-            </p>
-            <p className="mt-1 text-sm text-slate-500">{label}</p>
-          </div>
-        ))}
+            Refresh
+          </button>
+        )}
       </div>
 
-      {/* Placeholder content area */}
-      <div className="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-10 text-center">
-        <p className="text-sm font-medium text-slate-500">
-          Recent activity / charts go here
-        </p>
-      </div>
+      {isLoading && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-[118px] animate-pulse rounded-xl border bg-white"
+            />
+          ))}
+        </div>
+      )}
+
+      {!isLoading && error && (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center">
+          <p className="text-sm font-medium text-red-600">{error}</p>
+          <button
+            onClick={refetch}
+            className="mt-3 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+          >
+            Try again
+          </button>
+        </div>
+      )}
+
+      {!isLoading && !error && stats && <StatsDashboard data={stats} />}
     </div>
   );
 }

@@ -61,6 +61,9 @@ interface AdminUserRow {
 export async function getAllUsers(filters: AdminListUsersQuery) {
   const { search, role, page, limit } = filters;
 
+  let pageVal = 1;
+  let limitVal = 10;
+
   const conditions: string[] = [];
   const params: unknown[] = [];
 

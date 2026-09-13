@@ -14,6 +14,11 @@ import { useAuth } from "@/context/AuthContext";
 import { AdminPage } from "./AdminPage";
 import AdminHome from "@/pages/admin/AdminHome";
 import Messages from "@/pages/chat/Messages";
+import AdminUsersPage from "@/pages/admin/AdminUserPage";
+import AdminListing from "@/pages/admin/AdminListing";
+import AdminCategories from "@/pages/admin/AdminCategories";
+import AdminAnalytics from "@/pages/admin/AdminAnalytics";
+import AdminSettings from "@/pages/admin/AdminSettings";
 
 export function AppRouter() {
   const { user } = useAuth();
@@ -114,21 +119,46 @@ export function AppRouter() {
 
       <Route
         path="/admin/users"
-        // element={
-        //   <AdminPage>
-        //     <AdminUsers />
-        //   </AdminPage>
-        // }
+        element={
+          <AdminPage>
+            <AdminUsersPage />
+          </AdminPage>
+        }
       />
       <Route
         path="/admin/listings"
-        // element={
-        //   <AdminPage>
-        //     <AdminListings />
-        //   </AdminPage>
-        // }
+        element={
+          <AdminPage>
+            <AdminListing />
+          </AdminPage>
+        }
       />
 
+      <Route
+        path="/admin/categories"
+        element={
+          <AdminPage>
+            <AdminCategories />
+          </AdminPage>
+        }
+      />
+
+      <Route
+        path="/admin/analytics"
+        element={
+          <AdminPage>
+            <AdminAnalytics />
+          </AdminPage>
+        }
+      />
+      <Route
+        path="/admin/settings"
+        element={
+          <AdminPage>
+            <AdminSettings />
+          </AdminPage>
+        }
+      />
       {/* 404 */}
       <Route
         path="*"

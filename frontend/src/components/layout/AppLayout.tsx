@@ -5,7 +5,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="app-shell-bg min-h-screen">
       <Sidebar />
-      <div className="ml-64 min-h-screen ">{children}</div>
+      <div className="ml-64 min-h-screen bg-slate-950">{children}</div>
     </div>
   );
 }

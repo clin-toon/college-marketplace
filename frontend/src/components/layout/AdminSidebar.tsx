@@ -1,5 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { FiHome, FiUsers, FiGrid, FiLogOut, FiMenu, FiX } from "react-icons/fi";
+import { TbCategoryFilled } from "react-icons/tb";
+import { IoMdAnalytics } from "react-icons/io";
+import { IoSettings } from "react-icons/io5";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 
@@ -7,6 +10,9 @@ const links = [
   { to: "/admin", label: "Home", icon: FiHome, end: true },
   { to: "/admin/users", label: "Users", icon: FiUsers },
   { to: "/admin/listings", label: "Listings", icon: FiGrid },
+  { to: "/admin/categories", label: "Categories", icon: TbCategoryFilled },
+  { to: "/admin/analytics", label: "Analytics", icon: IoMdAnalytics },
+  { to: "/admin/settings", label: "Settings", icon: IoSettings },
 ];
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {

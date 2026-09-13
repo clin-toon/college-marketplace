@@ -15,6 +15,8 @@ import {
   updateCategorySchema,
 } from "./admin.validation";
 import * as adminController from "./admin.controllers";
+import * as v from "./adminListing.validation";
+import * as c from "./adminListing.controllers";
 
 const router = Router();
 
@@ -41,7 +43,7 @@ router.patch(
   adminController.updateUserRoleHandler,
 );
 router.patch(
-  "/admin/users/:id/posting-permission",
+  "/admin/users/:id/posting-access",
   validate({ params: userIdParamSchema, body: updatePostingPermissionSchema }),
   adminController.updatePostingPermissionHandler,
 );
@@ -75,7 +77,7 @@ router.post(
   validate({ body: createCategorySchema }),
   adminController.createCategoryHandler,
 );
-router.put(
+router.patch(
   "/admin/categories/:id",
   validate({ params: categoryIdParamSchema, body: updateCategorySchema }),
   adminController.updateCategoryHandler,
@@ -84,6 +86,51 @@ router.delete(
   "/admin/categories/:id",
   validate({ params: categoryIdParamSchema }),
   adminController.deleteCategoryHandler,
+);
+
+// analytics
+router.get("/admin/listings/analytics/by-category", c.getByCategoryHandler);
+router.get("/admin/listings/analytics/by-condition", c.getByConditionHandler);
+router.get(
+  "/admin/listings/analytics/timeline",
+  validate({ query: v.analyticsTimelineQuerySchema }),
+  c.getTimelineHandler,
+);
+router.get(
+  "/admin/listings/analytics/price-distribution",
+  c.getPriceDistributionHandler,
+);
+router.get(
+  "/admin/listings/analytics/top-favourited",
+  c.getTopFavouritedHandler,
+);
+router.get("/admin/listings/analytics/top-sellers", c.getTopSellersHandler);
+
+router.get(
+  "/admin/listings",
+  validate({ query: v.adminListingQuerySchema }),
+  c.getAllListingsHandler,
+);
+router.get(
+  "/admin/listings/:id",
+  validate({ params: v.listingIdParamSchema }),
+  c.getListingDetailHandler,
+);
+
+router.patch(
+  "/admin/listings/:id/hide",
+  validate({ params: v.listingIdParamSchema }),
+  c.hideListingHandler,
+);
+router.patch(
+  "/admin/listings/:id/show",
+  validate({ params: v.listingIdParamSchema }),
+  c.showListingHandler,
+);
+router.patch(
+  "/admin/listings/:id/status",
+  validate({ params: v.listingIdParamSchema }),
+  c.setStatusHandler,
 );
 
 export default router;

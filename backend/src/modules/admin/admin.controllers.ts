@@ -16,7 +16,6 @@ function requireAdmin(req: Request) {
   return req.user;
 }
 
-// ---------- Dashboard ----------
 export async function getStatsHandler(
   req: Request,
   res: Response,
