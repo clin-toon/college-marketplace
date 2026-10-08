@@ -20,7 +20,7 @@ This service is responsible for
 sending OTP code in the provided email
 */
 const sendOTPinEmail = async (email: string, otpCode: string) => {
-  const resend = new Resend(process.env.API_KEY);
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   const { data, error } = await resend.emails.send({
     from: "noreply@klintonthapa.com.np",
