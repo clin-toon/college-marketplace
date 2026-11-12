@@ -13,7 +13,7 @@ export function useConversationsList() {
     setError(null);
     try {
       const response = await getConversations();
-      console.log(response.data);
+
       setConversations(response.data);
     } catch (err) {
       setError(

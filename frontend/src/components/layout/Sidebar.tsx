@@ -5,7 +5,6 @@ import {
   HiOutlineSquares2X2,
   HiOutlineClipboardDocumentList,
   HiOutlineHeart,
-  HiOutlineBell,
   HiOutlineChatBubbleLeftRight,
   HiOutlineArrowRightOnRectangle,
 } from "react-icons/hi2";
@@ -22,7 +21,6 @@ const NAV_ITEMS = [
   },
   { to: "/favourites", label: "Favourites", icon: HiOutlineHeart },
   { to: "/messages", label: "Messages", icon: HiOutlineChatBubbleLeftRight },
-  { to: "/notifications", label: "Notifications", icon: HiOutlineBell },
 ];
 
 export function Sidebar() {

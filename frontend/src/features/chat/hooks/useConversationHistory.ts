@@ -12,14 +12,15 @@ export function useConversationHistory(
   const [error, setError] = useState<string | null>(null);
 
   const fetchHistory = useCallback(async () => {
-    if (!listingId || !otherUserId) return;
     setIsLoading(true);
     setError(null);
     try {
-      const response = await getConversationHistory(listingId, otherUserId);
+      const response = await getConversationHistory(
+        listingId as string,
+        otherUserId as string,
+      );
 
       setMessages(response.data);
-      console.log("HISTORY ", JSON.stringify(response.data[0]));
     } catch (err) {
       setError(
         err instanceof ApiError
@@ -32,6 +33,9 @@ export function useConversationHistory(
   }, [listingId, otherUserId]);
 
   useEffect(() => {
+    if (!listingId || !otherUserId) {
+      return;
+    }
     fetchHistory();
   }, [fetchHistory]);
 

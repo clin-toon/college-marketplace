@@ -30,6 +30,10 @@ export function useChatSocket(
     setIsJoined(false);
 
     function join() {
+      if (!listingId || !otherUserId) {
+        return;
+      }
+
       socket.emit(
         "join_conversation",
         { listingId, otherUserId },

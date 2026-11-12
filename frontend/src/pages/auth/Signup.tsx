@@ -53,7 +53,7 @@ export default function Signup() {
         />
 
         <TextField
-          label="Phone NUmber"
+          label="Phone Number"
           type="string"
           maxLength={10}
           placeholder="Enter your phone number"
